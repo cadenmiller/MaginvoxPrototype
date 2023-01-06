@@ -1,9 +1,7 @@
 #pragma once
 
-#include <_types/_uint32_t.h>
 #include <vulkan/vulkan.h>
 #include "vk_mem_alloc.h"
-#include "vulkan/vulkan_core.h"
 
 class RenderDevice;
 class Buffer;
@@ -91,7 +89,7 @@ public:
     BufferView*      createBufferView(VkBuffer buffer, VkFormat format, VkDeviceSize offset, VkDeviceSize range);
     Image*           createImage(VkImageType imageType, VkFormat format, VkExtent3D extent, uint32_t mipLevels, VkImageTiling tiling, VkImageUsageFlags usage, VmaMemoryUsage memoryUsage, VkMemoryPropertyFlags requiredFlags);
     ImageView*       createImageView(VkImage image, VkImageViewType viewType, VkExtent3D extent, VkFormat format, VkComponentMapping components, VkImageSubresourceRange subresourceRange);
-    
+
 private:
     VkInstance               mInstance;
 #ifndef NDEBUG

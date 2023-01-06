@@ -1,9 +1,11 @@
 #include "vulkan/vulkan_core.h"
 #include <stdexcept>
+#include <vector>
 
 #define VMA_IMPLEMENTATION
 #include "vk_mem_alloc.h"
 
+#include "Version.h"
 #include "RenderDevice.h"
 
 
@@ -127,4 +129,54 @@ ImageView::ImageView(VkDevice device, VkImage image, VkImageViewType viewType, V
     {
         throw std::runtime_error("Could not create an image view!");
     }
+}
+
+RenderDevice::RenderDevice(uint32_t physicalDeviceIndex)
+{
+
+    VkApplicationInfo applicationInfo = {};
+    applicationInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+    applicationInfo.pNext = nullptr;
+    applicationInfo.pApplicationName = "Maginvox";
+    applicationInfo.applicationVersion = VK_MAKE_API_VERSION(MAGINVOX_VERSION_VARIANT, MAGINVOX_VERSION_MAJOR, MAGINVOX_VERSION_MINOR, MAGINVOX_VERSION_PATCH);
+    applicationInfo.pEngineName = "Maginvox";
+    applicationInfo.engineVersion = VK_MAKE_API_VERSION(MAGINVOX_VERSION_VARIANT, MAGINVOX_VERSION_MAJOR, MAGINVOX_VERSION_MINOR, MAGINVOX_VERSION_PATCH);
+    applicationInfo.apiVersion = VK_VERSION_1_2;
+
+#ifdef MAGINVOX_DEBUG
+
+    uint32_t layerCount = 0;
+    std::vector<VkLayerProperties> layerProperties = {};
+
+    if (vkEnumerateInstanceLayerProperties(&layerCount, nullptr) != VK_SUCCESS)
+    {
+        throw std::runtime_error("Could not get the instance layers count!");
+    }
+
+
+    layerProperties.resize(layerCount);
+
+    if (vkEnumerateInstanceLayerProperties(&layerCount, layerProperties.data()) != VK_SUCCESS)
+    {
+        throw std::runtime_error("Could not get the instance layers!");
+    }
+
+    const std::vector<const char*> requiredLayers = {
+        ""
+    };
+
+#endif
+
+    VkInstanceCreateInfo instanceCreateInfo = {};
+    instanceCreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+    instanceCreateInfo.pNext = nullptr;
+    instanceCreateInfo.flags = 0;
+    instanceCreateInfo.pApplicationInfo = &applicationInfo;
+    instanceCreateInfo.enabledLayerCount;
+
+    if (vkCreateInstance(&instanceCreateInfo, nullptr, &mInstance) != VK_SUCCESS)
+    {
+        throw std::runtime_error("Could not create the instance!");
+    }
+
 }
