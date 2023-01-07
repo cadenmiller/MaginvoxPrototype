@@ -143,16 +143,19 @@ RenderDevice::RenderDevice(uint32_t physicalDeviceIndex)
     applicationInfo.engineVersion = VK_MAKE_API_VERSION(MAGINVOX_VERSION_VARIANT, MAGINVOX_VERSION_MAJOR, MAGINVOX_VERSION_MINOR, MAGINVOX_VERSION_PATCH);
     applicationInfo.apiVersion = VK_VERSION_1_2;
 
+    std::vector<const char*> instanceLayers{};
+    std::vector<const char*> instanceExtensions{};
+
 #ifdef MAGINVOX_DEBUG
 
     uint32_t layerCount = 0;
     std::vector<VkLayerProperties> layerProperties = {};
+    std::vector<const char*> requiredLayers = {"VK_LAYER_KHRONOS_validation"};
 
     if (vkEnumerateInstanceLayerProperties(&layerCount, nullptr) != VK_SUCCESS)
     {
         throw std::runtime_error("Could not get the instance layers count!");
     }
-
 
     layerProperties.resize(layerCount);
 
@@ -161,18 +164,61 @@ RenderDevice::RenderDevice(uint32_t physicalDeviceIndex)
         throw std::runtime_error("Could not get the instance layers!");
     }
 
-    const std::vector<const char*> requiredLayers = {
-        ""
-    };
+    for (uint32_t i = 0; i < requiredLayers.size(); i++)
+    {
+        bool foundLayer = false;
+        for (uint32_t j = 0; j < layerProperties.size(); j++)
+        {
+            if (strcmp(requiredLayers[i], layerProperties[j].layerName) == 0)
+            {
+                foundLayer = true;
+            }
+        }
+
+        if (!foundLayer)
+        {
+            throw std::runtime_error("Could not find a required instance layer!");
+        }
+
+        instanceLayers.push_back(requiredLayers[i]);
+    }
 
 #endif
+
+    uint32_t instanceExtensionCount = 0;
+    std::vector<VkExtensionProperties> instanceExtensionProperties{};
+    std::vector<const char*> requiredInstanceExtensions = {
+        "VK_KHR_surface",
+        GetWindow()->GetSurfaceInstanceExtensionName(),
+    };
+
+#ifdef 
+
+
+
+    if (vkEnumerateInstanceExtensionProperties(nullptr, &instanceExtensionCount, nullptr) != VK_SUCCESS)
+    {
+        throw std::runtime_error("Could not get the instance extension property count!");
+    }
+
+    instanceExtensionProperties.resize(instanceExtensionCount);
+
+    if (vkEnumerateInstanceExtensionProperties(nullptr, &instanceExtensionCount, instanceExtensionProperties.data()) != VK_SUCCESS)
+    {
+        throw std::runtime_error("Could not get the instance extension properties!")
+    }
+
+    for (uint32_t i = 0; i < )
 
     VkInstanceCreateInfo instanceCreateInfo = {};
     instanceCreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     instanceCreateInfo.pNext = nullptr;
     instanceCreateInfo.flags = 0;
     instanceCreateInfo.pApplicationInfo = &applicationInfo;
-    instanceCreateInfo.enabledLayerCount;
+    instanceCreateInfo.enabledLayerCount = static_cast<uint32_t>(instanceLayers.size());
+    instanceCreateInfo.ppEnabledLayerNames = instanceLayers.data();
+    instanceCreateInfo.enabledExtensionCount = static_cast<uint32_t>(instanceExtensions.size());
+    instanceCreateInfo.ppEnabledExtensionNames = instanceExtensions.data();
 
     if (vkCreateInstance(&instanceCreateInfo, nullptr, &mInstance) != VK_SUCCESS)
     {

@@ -3,9 +3,9 @@
 #include "Platform.h"
 
 #ifdef MAGINVOX_PLATFORM_WINDOWS
-    using VulkanWindow = VulkanWindows;
+    using Window = WindowWindows;
 #elif MAGINVOX_PLATFORM_LINUX
-    using VulkanWindow = VulkanX11;
+    using Window = WindowX11;
 #elif MAGINVOX_PLATFORM_MACOS
-    using VulkanWindow = VulkanMacos;
+    using Window = WindowMacOS;
 #endif
