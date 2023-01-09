@@ -4,13 +4,16 @@ with pkgs;
 mkShell {
   
   buildInputs = [
-    # put packages here.
-    glslang # or shaderc
+    cmake
+    gcc
+    glslang
+    pkg-config
+    #xorg.libXau
+    xorg.libxcb
     vulkan-headers
     vulkan-loader
     vulkan-tools
-    vulkan-validation-layers # maybe?
-    # glm and whatnot …
+    vulkan-validation-layers
   ];
 
   # If it doesn’t get picked up through nix magic

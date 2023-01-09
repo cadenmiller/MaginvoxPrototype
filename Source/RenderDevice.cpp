@@ -1,11 +1,10 @@
-#include "vulkan/vulkan_core.h"
-#include <stdexcept>
 #include <vector>
 
 #define VMA_IMPLEMENTATION
 #include "vk_mem_alloc.h"
 
 #include "Version.h"
+#include "PlatformWindow.h"
 #include "RenderDevice.h"
 
 
@@ -36,7 +35,7 @@ Buffer::Buffer(VmaAllocator allocator, VkDeviceSize size, VkBufferUsageFlags usa
 
     if (vmaCreateBuffer(allocator, &bufferCreateInfo, &allocationCreateInfo, &mBuffer, &mAllocation, &allocationInfo) != VK_SUCCESS) 
     {
-        throw std::runtime_error("Could not create a VMA Buffer, might've ran out of graphics memory.");
+        throw std::runtime_error("Could not create a vulkan memory allocator buffer, might've ran out of graphics memory.");
     }
 }
 
@@ -59,7 +58,7 @@ BufferView::BufferView(VkDevice device, VkBuffer buffer, VkFormat format, VkDevi
 
     if (vkCreateBufferView(mDevice, &bufferViewCreateInfo, nullptr, &mBufferView) != VK_SUCCESS)
     {
-        throw std::runtime_error("Could not create a buffer view!");
+        throw std::runtime_error("Could not create a vulkan buffer view!");
     }
 }
 
@@ -103,7 +102,7 @@ Image::Image(VmaAllocator allocator, uint32_t graphicsQueueIndex, VkImageType im
 
     if (vmaCreateImage(allocator, &imageCreateInfo, &allocationCreateInfo, &mImage, &mAllocation, &allocationInfo) != VK_SUCCESS)
     {
-        throw std::runtime_error("Could not create a VMA Image!");
+        throw std::runtime_error("Could not create a vulkan memory allocator image!");
     }
 }
 
@@ -127,7 +126,7 @@ ImageView::ImageView(VkDevice device, VkImage image, VkImageViewType viewType, V
 
     if (vkCreateImageView(mDevice, &imageViewCreateInfo, nullptr, &mImageView) != VK_SUCCESS)
     {
-        throw std::runtime_error("Could not create an image view!");
+        throw std::runtime_error("Could not create a vulkan image view!");
     }
 }
 
@@ -154,14 +153,14 @@ RenderDevice::RenderDevice(uint32_t physicalDeviceIndex)
 
     if (vkEnumerateInstanceLayerProperties(&layerCount, nullptr) != VK_SUCCESS)
     {
-        throw std::runtime_error("Could not get the instance layers count!");
+        throw std::runtime_error("Could not get the vulkan instance layers count!");
     }
 
     layerProperties.resize(layerCount);
 
     if (vkEnumerateInstanceLayerProperties(&layerCount, layerProperties.data()) != VK_SUCCESS)
     {
-        throw std::runtime_error("Could not get the instance layers!");
+        throw std::runtime_error("Could not get the vulkan instance layers!");
     }
 
     for (uint32_t i = 0; i < requiredLayers.size(); i++)
@@ -172,12 +171,13 @@ RenderDevice::RenderDevice(uint32_t physicalDeviceIndex)
             if (strcmp(requiredLayers[i], layerProperties[j].layerName) == 0)
             {
                 foundLayer = true;
+                break;
             }
         }
 
         if (!foundLayer)
         {
-            throw std::runtime_error("Could not find a required instance layer!");
+            throw std::runtime_error("Could not find a required vulkan instance layer!");
         }
 
         instanceLayers.push_back(requiredLayers[i]);
@@ -189,26 +189,44 @@ RenderDevice::RenderDevice(uint32_t physicalDeviceIndex)
     std::vector<VkExtensionProperties> instanceExtensionProperties{};
     std::vector<const char*> requiredInstanceExtensions = {
         "VK_KHR_surface",
-        GetWindow()->GetSurfaceInstanceExtensionName(),
+        PlatformWindow::getInstanceSurfaceExtensionName(),
     };
 
-#ifdef 
-
-
+#ifdef MAGINVOX_DEBUG
+    requiredInstanceExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+#endif
 
     if (vkEnumerateInstanceExtensionProperties(nullptr, &instanceExtensionCount, nullptr) != VK_SUCCESS)
     {
-        throw std::runtime_error("Could not get the instance extension property count!");
+        throw std::runtime_error("Could not get the vulkan instance extension property count!");
     }
 
     instanceExtensionProperties.resize(instanceExtensionCount);
 
     if (vkEnumerateInstanceExtensionProperties(nullptr, &instanceExtensionCount, instanceExtensionProperties.data()) != VK_SUCCESS)
     {
-        throw std::runtime_error("Could not get the instance extension properties!")
+        throw std::runtime_error("Could not get the vulkan instance extension properties!");
     }
 
-    for (uint32_t i = 0; i < )
+    for (uint32_t i = 0; i < requiredInstanceExtensions.size(); i++)
+    {
+        bool foundExtension = false;
+        for (uint32_t j = 0; j < instanceExtensionProperties.size(); j++)
+        {
+            if (strcmp(requiredInstanceExtensions[i], instanceExtensionProperties[j].extensionName) == 0)
+            {
+                foundExtension = true;
+                break;
+            }
+        }
+
+        if (!foundExtension)
+        {
+            throw std::runtime_error("Could not find a required vulkan instance extension!");
+        }
+
+        instanceExtensions.push_back(requiredInstanceExtensions[i]);
+    }
 
     VkInstanceCreateInfo instanceCreateInfo = {};
     instanceCreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
@@ -225,4 +243,5 @@ RenderDevice::RenderDevice(uint32_t physicalDeviceIndex)
         throw std::runtime_error("Could not create the instance!");
     }
 
+    vkEnumeratePhysicalDevices(mInstance, )
 }

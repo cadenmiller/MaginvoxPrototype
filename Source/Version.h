@@ -1,6 +1,5 @@
 #pragma once
 
-
 struct VersionVariantFlagBits 
 {
     enum Flags

@@ -75,16 +75,6 @@ public:
     RenderDevice(uint32_t physicalDeviceIndex = 0);
     ~RenderDevice();
 
-    VkInstance       getInstance() {return mInstance;}
-    uint32_t         getPhysicalDeviceIndex() {return mPhysicalDeviceIndex;}
-    VkPhysicalDevice getPhysicalDevice() {return mPhysicalDevice;}
-    VkDevice         getDevice() {return mDevice;}
-    uint32_t         getGraphicsQueueIndex() {return mGraphicsQueueIndex;}
-    uint32_t         getPresentQueueIndex() {return mPresentQueueIndex;}
-    bool             isGraphicsAndPresentQueueIndexSame() {return mGraphicsQueueIndex == mPresentQueueIndex;}
-    VkQueue          getGraphicsQueue() {return mGraphicsQueue;}
-    VkQueue          getPresentQueue() {return mPresentQueue;}
-
     Buffer*          createBuffer(VkDeviceSize size, VkBufferUsageFlagBits usage, VmaMemoryUsage memoryUsage);
     BufferView*      createBufferView(VkBuffer buffer, VkFormat format, VkDeviceSize offset, VkDeviceSize range);
     Image*           createImage(VkImageType imageType, VkFormat format, VkExtent3D extent, uint32_t mipLevels, VkImageTiling tiling, VkImageUsageFlags usage, VmaMemoryUsage memoryUsage, VkMemoryPropertyFlags requiredFlags);
