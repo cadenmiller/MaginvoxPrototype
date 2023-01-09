@@ -133,6 +133,7 @@ ImageView::ImageView(VkDevice device, VkImage image, VkImageViewType viewType, V
 RenderDevice::RenderDevice(uint32_t physicalDeviceIndex)
 {
 
+    /* Application data for the VkInstance. */
     VkApplicationInfo applicationInfo = {};
     applicationInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     applicationInfo.pNext = nullptr;
@@ -145,6 +146,8 @@ RenderDevice::RenderDevice(uint32_t physicalDeviceIndex)
     std::vector<const char*> instanceLayers{};
     std::vector<const char*> instanceExtensions{};
 
+
+/* Add validation layers if we are on debug mode. */
 #ifdef MAGINVOX_DEBUG
 
     uint32_t layerCount = 0;
@@ -185,6 +188,7 @@ RenderDevice::RenderDevice(uint32_t physicalDeviceIndex)
 
 #endif
 
+/* Add the instance extensions required for the VkInstance. */
     uint32_t instanceExtensionCount = 0;
     std::vector<VkExtensionProperties> instanceExtensionProperties{};
     std::vector<const char*> requiredInstanceExtensions = {
@@ -228,6 +232,7 @@ RenderDevice::RenderDevice(uint32_t physicalDeviceIndex)
         instanceExtensions.push_back(requiredInstanceExtensions[i]);
     }
 
+/* Finally create the VkInstance. */
     VkInstanceCreateInfo instanceCreateInfo = {};
     instanceCreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     instanceCreateInfo.pNext = nullptr;
@@ -243,5 +248,29 @@ RenderDevice::RenderDevice(uint32_t physicalDeviceIndex)
         throw std::runtime_error("Could not create the instance!");
     }
 
-    vkEnumeratePhysicalDevices(mInstance, )
+/* Create the VkSurface from the window. */
+    Platform::initializeVulkanWindow(mInstance);
+
+/* Get the physical device we are going to use. */
+    uint32_t physicalDeviceCount = 0;
+    std::vector<VkPhysicalDevice> physicalDevices{};
+    
+    if (vkEnumeratePhysicalDevices(mInstance, &physicalDeviceCount, nullptr) != VK_SUCCESS)
+    {
+        throw std::runtime_error("Could not get the vulkan physical device count!");
+    }
+
+    physicalDevices.resize(physicalDeviceCount);
+
+    if (vkEnumeratePhysicalDevices(mInstance, &physicalDeviceCount, physicalDevices.data()) != VK_SUCCESS)
+    {
+        throw std::runtime_error("Could not get the vulkan physical devices!");
+    }
+
+/* TODO: We are currently just using the first physical device, change this to use the best physical device. */
+    mPhysicalDevice = physicalDevices.front();
+
+
+
+
 }

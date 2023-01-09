@@ -3,6 +3,12 @@ project(MaginvoxPrototype)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
+# Give clangd a little more info for NixOS from here https://discourse.nixos.org/t/get-clangd-to-find-standard-headers-in-nix-shell/11268/10 
+if(CMAKE_EXPORT_COMPILE_COMMANDS)
+  set(CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES 
+      ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES})
+endif()
+
 set(MaginvoxSources 
     "Source/PlatformWindowLinux.cpp"
     "Source/RenderDevice.cpp"
