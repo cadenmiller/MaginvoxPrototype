@@ -1,4 +1,5 @@
 #include <vector>
+#include <vulkan/vulkan_core.h>
 
 #define VMA_IMPLEMENTATION
 #include "vk_mem_alloc.h"
@@ -193,7 +194,7 @@ RenderDevice::RenderDevice(uint32_t physicalDeviceIndex)
     std::vector<VkExtensionProperties> instanceExtensionProperties{};
     std::vector<const char*> requiredInstanceExtensions = {
         "VK_KHR_surface",
-        PlatformWindow::getInstanceSurfaceExtensionName(),
+        Platform::getSurfaceExtensionName(),
     };
 
 #ifdef MAGINVOX_DEBUG
@@ -232,7 +233,7 @@ RenderDevice::RenderDevice(uint32_t physicalDeviceIndex)
         instanceExtensions.push_back(requiredInstanceExtensions[i]);
     }
 
-/* Finally create the VkInstance. */
+/* Create the VkInstance. */
     VkInstanceCreateInfo instanceCreateInfo = {};
     instanceCreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     instanceCreateInfo.pNext = nullptr;
@@ -249,7 +250,7 @@ RenderDevice::RenderDevice(uint32_t physicalDeviceIndex)
     }
 
 /* Create the VkSurface from the window. */
-    Platform::initializeVulkanWindow(mInstance);
+    Platform::createVulkanSurface(mInstance);
 
 /* Get the physical device we are going to use. */
     uint32_t physicalDeviceCount = 0;
@@ -270,7 +271,29 @@ RenderDevice::RenderDevice(uint32_t physicalDeviceIndex)
 /* TODO: We are currently just using the first physical device, change this to use the best physical device. */
     mPhysicalDevice = physicalDevices.front();
 
+/* Find the queue families we are going to use for the VkDevice. */
+    uint32_t queueFamilyPropertiesCount = 0;
+    std::vector<VkQueueFamilyProperties> queueFamilyProperties = {};
 
+    vkGetPhysicalDeviceQueueFamilyProperties(mPhysicalDevice, &queueFamilyPropertiesCount, nullptr);
+
+    queueFamilyProperties.resize(queueFamilyPropertiesCount);
+
+    vkGetPhysicalDeviceQueueFamilyProperties(mPhysicalDevice, &queueFamilyPropertiesCount, queueFamilyProperties.data());
+
+    for (uint32_t i = 0; i < queueFamilyPropertiesCount; i++)
+    {
+        VkQueueFamilyProperties* pProperties = &queueFamilyProperties[i];
+    
+        if (pProperties->queueFlags & VK_QUEUE_GRAPHICS_BIT)
+            mGraphicsQueueIndex = i;
+
+        bool surfaceSupported = false;
+        if (vkGetPhysicalDeviceSurfaceSupportKHR(mPhysicalDevice, i, Platform::getWindow()->getSurface(), &surfaceSupported) )
+        {
+
+        }
+    }
 
 
 }
