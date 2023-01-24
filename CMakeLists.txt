@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(MaginvoxPrototype)
+project(WaePrototype)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
@@ -9,26 +9,23 @@ if(CMAKE_EXPORT_COMPILE_COMMANDS)
       ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES})
 endif()
 
-set(MaginvoxSources 
-    "Source/PlatformWindowLinux.cpp"
-    "Source/RenderDevice.cpp"
-    "Source/Main.cpp")
-set(MaginvoxLibraries "")
-set(MaginvoxIncludes "")
+set(WaeSources "Sources/main.c")
+set(WaeLibraries "")
+set(WaeIncludes "")
 
-add_executable(MaginvoxPrototype ${MaginvoxSources})
+add_library(WaeLibrary )
 
 find_package(XCB REQUIRED)
 find_package(Vulkan REQUIRED)
 
-list(APPEND MaginvoxLibraries ${XCB_LIBRARIES} ${Vulkan_LIBRARY})
-list(APPEND MaginvoxIncludes ${XCB_INCLUDE_DIRS} ${Vulkan_INCLUDE_DIR})
+list(APPEND WaeLibraries ${XCB_LIBRARIES} ${Vulkan_LIBRARY})
+list(APPEND WaeIncludes ${XCB_INCLUDE_DIRS} ${Vulkan_INCLUDE_DIR})
 
-target_link_libraries(MaginvoxPrototype ${MaginvoxLibraries})
-target_include_directories(MaginvoxPrototype PUBLIC ${MaginvoxIncludes})
-set_target_properties(MaginvoxPrototype PROPERTIES CXX_STANDARD 11)
+target_link_libraries(WaePrototype ${WaeLibraries})
+target_include_directories(WaePrototype PUBLIC ${WaeIncludes})
+set_target_properties(WaePrototype PROPERTIES CXX_STANDARD 11)
 
 # Warning Turny-off
 if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    target_compile_options(MaginvoxPrototype PUBLIC "-Wno-nullability-completeness")
+    target_compile_options(WaePrototype PUBLIC "-Wno-nullability-completeness")
 endif()
