@@ -14,8 +14,7 @@ public:
 
 public:
     waQuaternion4f& operator=(const waQuaternion4f& other);
-
-    waQuaternion4f& operator*(waQuaternion4f& other);
+    waQuaternion4f& operator*(const waQuaternion4f& other);
 
 };
 

@@ -51,12 +51,17 @@ public:
 public:
     waMatrix3f& operator=(const waMatrix3f& other);
 
-    waMatrix3f& operator+(waMatrix3f& other);
-    waMatrix3f& operator-(waMatrix3f& other);
-    waMatrix3f& operator*(waMatrix3f& other);
+    waMatrix3f& operator+(const waMatrix3f& other) const;
+    waMatrix3f& operator-(const waMatrix3f& other) const;
+    waMatrix3f& operator*(const waMatrix3f& other) const;
 
 public:
-    float determinant();
+    float determinant() const;
+    waMatrix3f inverted() const;
+    waMatrix3f transposed() const;
+
+    waMatrix3f& invert() const;
+    waMatrix3f& transpose();
     waMatrix3f& translate(waVector2f& translation);
     waMatrix3f& rotate(float angle);
     waMatrix3f& scale(waVector2f& scale);
@@ -76,7 +81,7 @@ public:
     static const waMatrix4f identity;
 
     waMatrix4f(); /* Identity */
-    waMatrix4f(float m11, float m12, float m13, float m14, float m21, 
+    waMatrix4f(float m11, float m12, float m13, float m14, float m21,
         float m22, float m23, float m24, float m31, float m32,
         float m33, float m34, float m41, float m42, float m43,
         float m44);
@@ -84,12 +89,17 @@ public:
 public:
     waMatrix4f& operator=(waMatrix4f& other);
     
-    waMatrix4f& operator+(waMatrix4f& other);
-    waMatrix4f& operator-(waMatrix4f& other);
-    waMatrix4f& operator*(waMatrix4f& other);
+    waMatrix4f& operator+(waMatrix4f& other) const;
+    waMatrix4f& operator-(waMatrix4f& other) const;
+    waMatrix4f& operator*(waMatrix4f& other) const;
 
 public:
-    float determinant();
+    float determinant() const;
+    waMatrix4f inverse() const;
+    waMatrix4f transposed() const;
+
+    waMatrix4f& invert();
+    waMatrix4f& transpose();
     waMatrix4f& translate(waVector3f& translation);
     waMatrix4f& rotate(waQuaternion4f& rotation);
     waMatrix4f& rotateEuler(waVector3f& rotationEuler);
@@ -100,6 +110,7 @@ public:
     waMatrix4f& setRotationEuler(waVector3f& rotationEuler);
     waMatrix4f& setScale(waVector3f& scale);
     waMatrix4f& setScaleScalar(float scalar);
+
 
 };
 
