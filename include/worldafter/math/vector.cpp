@@ -1,6 +1,6 @@
-#include "vector.h"
-#include <endian.h>
 #include <math.h>
+
+#include "vector.h"
 
 /**********
  * waVector2f
@@ -29,33 +29,6 @@ waVector2f::waVector2f(float xy)
 waVector2f::waVector2f(float x, float y)
     : x(x), y(y)
 {
-}
-
-waVector2f& waVector2f::operator=(const waVector2f& other)
-{
-    x = other.x;
-    y = other.y;
-    return *this;
-}
-
-waVector2f waVector2f::operator+(const waVector2f& other) const
-{
-    return waVector2f{x + other.x, y + other.y};
-}
-
-waVector2f waVector2f::operator-(const waVector2f& other) const
-{
-    return waVector2f{x - other.x, y - other.y};
-}
-
-waVector2f waVector2f::operator*(const waVector2f& other) const
-{
-    return waVector2f{x * other.x, y * other.y};
-}
-
-waVector2f waVector2f::operator/(const waVector2f& other) const
-{
-    return waVector2f{x / other.x, y / other.y};
 }
 
 float waVector2f::magnitude() const
@@ -101,34 +74,6 @@ waVector3f::waVector3f(float xyz)
 waVector3f::waVector3f(float x, float y, float z)
     : x(x), y(y), z(z)
 {
-}
-
-waVector3f& waVector3f::operator=(const waVector3f& other)
-{
-    x = other.x;
-    y = other.y;
-    z = other.z;
-    return *this;
-}
-
-waVector3f waVector3f::operator+(const waVector3f& other) const
-{
-    return waVector3f{x+other.x, y+other.y, z+other.z};
-}
-
-waVector3f waVector3f::operator-(const waVector3f& other) const
-{
-    return waVector3f{x-other.x, y-other.y, z-other.z};
-}
-
-waVector3f waVector3f::operator*(const waVector3f& other) const
-{
-    return waVector3f{x*other.x, y*other.y, z*other.z};
-}
-
-waVector3f waVector3f::operator/(const waVector3f& other) const
-{
-    return waVector3f{x/other.x, y/other.y, z/other.z};
 }
 
 float waVector3f::magnitude() const

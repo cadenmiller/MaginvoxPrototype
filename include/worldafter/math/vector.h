@@ -13,17 +13,21 @@ public:
     static const waVector2f left;
 
     waVector2f(); /* zero */
-    waVector2f(const waVector2f& other);
+    waVector2f(const waVector2f& copy);
     waVector2f(float xy);
     waVector2f(float x, float y);
 
 public:
-    waVector2f& operator=(const waVector2f& other);
+    inline waVector2f& operator=(const waVector2f& rhs);
+    inline waVector2f& operator+=(const waVector2f& rhs);
+    inline waVector2f& operator-=(const waVector2f& rhs);
+    inline waVector2f& operator*=(const waVector2f& rhs); /* multiply components, not dot product */
+    inline waVector2f& operator/=(const waVector2f& rhs);
 
-    waVector2f operator+(const waVector2f& other) const;
-    waVector2f operator-(const waVector2f& other) const;
-    waVector2f operator*(const waVector2f& other) const; /* multiply components, not dot product */
-    waVector2f operator/(const waVector2f& other) const;
+    inline waVector2f operator+(const waVector2f& rhs) const;
+    inline waVector2f operator-(const waVector2f& rhs) const;
+    inline waVector2f operator*(const waVector2f& rhs) const; /* multiply components, not dot product */
+    inline waVector2f operator/(const waVector2f& rhs) const;
 
 public:
     float magnitude() const;
@@ -51,6 +55,10 @@ public:
 
 public:
     waVector3f& operator=(const waVector3f& other);
+    waVector3f& operator+=(const waVector3f& other);
+    waVector3f& operator-=(const waVector3f& other);
+    waVector3f& operator*=(const waVector3f& other); /* multiply components, not dot product */
+    waVector3f& operator/=(const waVector3f& other);
 
     waVector3f operator+(const waVector3f& other) const;
     waVector3f operator-(const waVector3f& other) const;
@@ -81,6 +89,10 @@ public:
 
 public:
     waVector4f& operator=(const waVector4f& other);
+    waVector4f& operator+=(const waVector4f& other);
+    waVector4f& operator-=(const waVector4f& other);
+    waVector4f& operator*=(const waVector4f& other); /* multiply components, not dot product */
+    waVector4f& operator/=(const waVector4f& other);
 
     waVector4f operator+(const waVector4f& other) const;
     waVector4f operator-(const waVector4f& other) const;
@@ -94,4 +106,6 @@ public:
 
 };
 
-#endif /* WORLD_AFTER_ENGINE_MATH_VECTOR_H */
+#include "vector.inl"
+
+#endif /* WA_ENGINE_MATH_VECTOR_H */
