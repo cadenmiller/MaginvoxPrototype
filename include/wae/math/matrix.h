@@ -1,6 +1,7 @@
 #ifndef WORLD_AFTER_MATH_MATRIX_H
 #define WORLD_AFTER_MATH_MATRIX_H
 
+
 #include "vector.h"
 #include "quaternion.h"
 
@@ -94,6 +95,7 @@ public:
     waMatrix4f& operator*(waMatrix4f& other) const;
 
 public:
+
     float determinant() const;
     waMatrix4f inverse() const;
     waMatrix4f transposed() const;
