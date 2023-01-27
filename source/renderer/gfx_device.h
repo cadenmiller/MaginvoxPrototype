@@ -19,11 +19,12 @@ struct waGfxDeviceCreateInfo
     bool useValidation;
 };
 
-class waGfxInstance
+class waGraphicsInstance
 {
 
 public:
-    waGfxInstance();
+    waGrahpicsInstance(waGraphicsRenderAPI api);
+    ~waGraphicsInstance();
 
 };
 
@@ -40,4 +41,4 @@ void waeDestroyInstance(waeInstance instance);
 
 
 
-#endif /* WAE_RENDERER_H */
+#endif /* WORLD_AFTER_GFX_DEVICE_H */
