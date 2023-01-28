@@ -9,4 +9,5 @@ if(CMAKE_EXPORT_COMPILE_COMMANDS)
       ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES})
 endif()
 
+add_subdirectory(Libraries)
 add_subdirectory(Source)

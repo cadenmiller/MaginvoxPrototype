@@ -8,6 +8,12 @@ mkShell {
     gcc
     glslang
     pkg-config
+    xorg.libX11
+    xorg.libXrandr
+    xorg.libXinerama
+    xorg.libXcursor
+    xorg.libXi
+
     #xorg.libXau
     xorg.libxcb
     vulkan-headers
